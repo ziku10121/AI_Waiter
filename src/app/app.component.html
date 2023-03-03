@@ -1,0 +1,94 @@
+<html [dir]="rtlSide">
+<!-- Header Start -->
+<header *ngIf="showHeader" id="header" class="animate__animated animate__fadeInDown wow" data-wow-duration=".5s">
+    <nav class="navbar align-items-center" style="flex-wrap: unset;">
+        <div class="nav-item  ml-lg-2 ml-xl-0 logo" style="min-width: fit-content;">
+            <a class="navbar-brand nav-link px-0" (click)="dashboard()">
+                <img src="assets/images/logo.png" class="img-fluid">
+            </a>
+        </div>
+
+        <div class="nav-inner ml-5 pl-4 w-100">
+            <ul class="navbar-nav d-flex align-items-center w-100">
+                <li class="nav-item show-only-large-devices active">
+                    <a class="nav-link" (click)="home()"><i class="zmdi zmdi-assignment"></i>{{'pos' | translate}}</a>
+                </li>
+                <li class="nav-item show-only-large-devices">
+                    <a class="nav-link" (click)="transactions()"><i class="zmdi zmdi-collection-text"></i>{{'transaction' | translate}}</a>
+                </li>
+                <li class="nav-item show-only-large-devices">
+                    <a class="nav-link" (click)="booking()"><i class="zmdi zmdi-airline-seat-recline-extra"></i> {{'booking' | translate}}</a>
+                </li>
+                <li class="nav-item show-only-large-devices">
+                    <a class="nav-link" (click)="orders_status()"><i class="zmdi zmdi-hourglass-alt"></i> {{'orders_status' | translate}}</a>
+                </li>
+
+                <li class="nav-item profile_img ml-auto" type="button" (click)="menu()">
+                    <div class="dropdown">
+                        <span>
+                            <i class="zmdi zmdi-menu"></i>
+                            <i class="zmdi zmdi-close"></i>
+                        </span>
+                        <a class="img_box center_img">
+                            <img src="assets/images/rs_1.png" class="crop_img">
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="right-side-menu">
+        <div class="menu-inner">
+            <ul class="align-items-center w-100">
+                <li class="show-medium-devices nav-item active">
+                    <a class="nav-link" (click)="home()"><i class="zmdi zmdi-assignment"></i>{{'pos' | translate}}</a>
+                </li>
+                <li class="show-medium-devices">
+                    <a class="nav-link" (click)="transactions()"><i class="zmdi zmdi-collection-text"></i>{{'transaction' | translate}}</a>
+                </li>
+                <li class="show-medium-devices">
+                    <a class="nav-link" (click)="booking()"><i class="zmdi zmdi-airline-seat-recline-extra"></i> {{'booking' | translate}}</a>
+                </li>
+                <li class="show-medium-devices">
+                    <a class="nav-link" (click)="orders_status()"><i class="zmdi zmdi-hourglass-alt"></i> {{'orders_status' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="people()"><i class="zmdi zmdi-accounts-alt"></i> {{'people' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="wallet()"><i class="zmdi zmdi-balance-wallet"></i> {{'wallet' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="items()"><i class="zmdi zmdi-cutlery"></i> {{'food_items' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="reviews()"><i class="zmdi zmdi-star"></i> {{'reviews' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="authentication()"><i class="zmdi zmdi-shield-check"></i>{{'authentication' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="setting()"><i class="zmdi zmdi-settings"></i>{{'settings' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="change_language()"><i class="zmdi zmdi-globe"></i>{{'change_language' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="support()"><i class="zmdi zmdi-email"></i>{{'support' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="terms_conditions()"><i class="zmdi zmdi-assignment"></i>{{'terms_conditions' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="login()"><i class="zmdi zmdi-open-in-new"></i>{{'logout' | translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div *ngIf="showHeader" class="header_spacebar"></div>
+<!-- Header End -->
+<router-outlet></router-outlet>
+
+</html>

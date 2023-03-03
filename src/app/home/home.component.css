@@ -1,0 +1,9 @@
+.order_item_container ul{
+    height: 100%;
+}
+#page_home .item_section .item_section_header .tab_btn_container .nav .nav-item{
+    cursor: pointer;
+}
+.nav-link{
+    pointer-events: none;
+}

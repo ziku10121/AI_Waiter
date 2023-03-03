@@ -1,0 +1,56 @@
+
+@media screen and (min-width:768px){
+    .order_section{
+        max-width: 100%;
+    }
+    .order_item_container .order_footer{
+        max-width: 100%;
+    }
+    .order_item_container ul{
+        height: 100%;
+    }
+    .order_item_container .order_header{
+        padding:15px 18px;
+    }
+    .order_item_container .order_header .row h2{
+        font-size: 40px;
+    }
+    .order_item_container ul li{
+        padding:20px 18px;
+    }
+    .order_item_container ul li h2{
+        font-size: 36px;
+        font-weight: 600;
+    }
+    .order_item_container ul li h3{
+        font-size: 36px;
+        font-weight: 600;
+    }
+    .order_item_container ul li h4{
+        font-size: 36px;
+        font-weight: 600;
+    }
+    .order_item_container ul li h3 i{
+        font-size:36px;
+        min-width:36px;
+        height:36px;
+        line-height: 36px;
+    }
+
+    .order_item_container .order_footer .amount_details h2{
+        font-size: 36px;
+        padding:10px 0;
+    }
+    .order_item_container .order_footer .amount_payble h2{
+        font-size:36px;
+    }
+    .order_item_container .order_footer .amount_payble{
+        margin-bottom: 20px;
+    }
+    .order_item_container .order_footer button.btn {
+        height: 80px;
+    }
+    button.btn a{
+        font-size: 28px;
+    }
+}

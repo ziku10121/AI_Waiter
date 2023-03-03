@@ -1,0 +1,35 @@
+
+<div>
+    <div *ngIf="!ready" class="row align-items-start justify-content-center mx-0" style="height:100vh;">
+        <div class="content">
+            <img src="https://picsum.photos/1080/1536/" alt="banner" srcset="">
+        </div>
+        <div class="btn-area w-100">
+            <button type="submit" class="btn" (click)="start1()">點擊螢幕開始點餐</button>
+        </div>
+    </div>
+    <!-- <div *ngIf="!ready" class="row align-items-start justify-content-center" style="height:100vh;padding-top:40%;">
+        <div class="card col-10 col-lg-10 bg-white">
+            <div class="card-body row align-items-center" style="height:200px">
+                <div class="col-12 text-center">
+                    <label style="margin-right:10px">NLP</label>
+                    <label class="text-primary">order</label>
+                </div>
+            </div>
+            <div class="row card-body">
+                <div class=" col-12 col-md-10 col-lg-5 col-xl-5  m-auto px-4">
+                    <button type="submit" class="btn rounded-pill" (click)="start1()">Start</button>
+                    <button type="submit" class="btn rounded-pill" (click)="start2()">Start2</button>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <div *ngIf="ready" class="row align-items-start justify-content-center" style="height:100vh;padding-top:40%;">
+        <div class="text-center loading-area">
+            <div class="spinner-border text-warning pa-5" role="status" style="width: 10rem; height: 10rem; margin-bottom:5rem;" >
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="loading-text text-warning" style="font-size: 65px;">Loading...</div>
+        </div>
+    </div> 
+</div>

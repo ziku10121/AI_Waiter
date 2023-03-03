@@ -1,0 +1,35 @@
+<div id="page_sign_in">
+    <div class="container-fluid px-0 px-md-3 px-lg-4">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                <div class="logo_box mx-auto text-center">
+                    <img src="assets/images/logo.png" class="img-fluid">
+                </div>
+                <div class="banner_img">
+                    <img src="assets/images/img_signin.png" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+                <form class="col-12 col-lg-10 mx-auto" action="dashboard.html">
+                    <div class="form-inner w-100">
+                        <div class="col-12 col-md-12 col-lg-9 col-xl-9  m-auto px-4">
+                            <h2>Login to your Account</h2>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">{{'phone_number' | translate}}</label>
+                                <input type="text" class="form-control" placeholder="{{'enter_phone_number' | translate}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">{{'otp_send_on_above_number' | translate}}</label>
+                                <input type="password" class="form-control" placeholder="{{'enter_otp' | translate}}" required>
+                            </div>
+
+                            <button type="submit" class="btn rounded-pill" (click)="home()">{{'login' | translate}}</button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

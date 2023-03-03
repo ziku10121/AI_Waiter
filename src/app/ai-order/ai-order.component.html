@@ -1,0 +1,138 @@
+
+<div>
+    <div class="row align-items-start justify-content-center mx-0" style="height:100vh">
+        <div class="card card-container col-12 col-lg-12 col-xl-10 bg-white px-0 mx-0">
+            <div class="card-body chatCard row align-items-center justify-content-center mx-0">
+                <!-- User Info -->
+                <!-- <div class="col">
+                    <div *ngIf="userInfo" class="col-8 text-start ml-auto mr-auto px-0 ">
+                        <div class="card">
+                            <img class="avatar-cust" [src]="'../../assets/images/profile/user.jpg'">
+                            <div class="cust-info px-2 pb-2">
+                                <div>{{userInfo.gender}}</div>
+                                <div>{{userInfo.age}}歲</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col px-0 align-self-start ai-status" style="height: 100%;">
+                    <div class="col-12 text-start ml-2 mr-auto px-0 mb-3">
+                        <!-- <a class="navbar-brand nav-link px-0" (click)="aiHome()"> -->
+                            <img src="assets/images/logo.png" class="img-fluid">
+                        <!-- </a> -->
+                    </div>
+                    <div class="col-12 text-start ml-0 mr-auto ai-audio">
+                        <div>
+                            <i class="zmdi zmdi-mic zmdi-hc-2x" [style]="isPhone? 'color:#24cb24;':'color:black;'"></i>
+                        </div>
+                        <div>
+                            <!-- <img *ngIf="isPhone" src="../../assets/wave/audio-wave.gif">
+                            <img *ngIf="!isPhone" src="../../assets/wave/audio-wave.png"> -->
+                            <div class="boxContainer">
+                                <div class="box box1" [style]="isPhone?'animation-duration: 1.2s;background:#24cb24;':''"></div>
+                                <div class="box box2" [style]="isPhone?'animation-duration: 1.2s;background:#24cb24;':''"></div>
+                                <div class="box box3" [style]="isPhone?'animation-duration: 1.2s;background:#24cb24;':''"></div>
+                                <div class="box box4" [style]="isPhone?'animation-duration: 1.2s;background:#24cb24;':''"></div>
+                                <div class="box box5" [style]="isPhone?'animation-duration: 1.2s;background:#24cb24;':''"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-start ml-0 mr-auto px-0 status-bg" [style]="isPhone ? 'background:#24cb24':'background:#ccc;'">
+                        <div class="txt">{{status}}</div>
+                    </div>
+                </div>
+                <!-- AI Waiter -->
+                <div class="col-5 col-lg-6 text-center" style="height: 100%;">
+                    <img class="avatar-logo" [src]="'../../assets/images/profile/'+ this.userImg">
+                    <div class="chat-about">
+                        <div class="ai-name">AI Waiter</div>
+                    </div>
+                </div>
+                <!-- Home -->
+                <div class="col text-right align-self-start">
+                    <div class="home">
+                        <img src="../../assets/images/homeBtn.png" alt="homeBtn" (click)="aiHome()">
+                        <!-- <i class="zmdi zmdi-home zmdi-hc-3x" (click)="aiHome()"></i> -->
+                    </div>
+                </div>
+            </div>
+            <div class="card-body chatContent ">
+                <div class="chat overflow-auto" [ngStyle]="{'height':ad?'75%':'100%'}">
+                    <ul *ngIf="true" >
+                        <li *ngFor="let s of messages; let key = index"  >
+                            <div *ngIf="s.from =='AI' " class="text-left">
+                                <img *ngIf="!(s.from === prev_from[key-1])" class="avatar" [src]="'../../assets/images/profile/'+ this.userImg">
+                                <div style="display: inline-block;max-width: 100%;" [style]="s.from === prev_from[key-1] ? 'margin-left:100px':''">
+                                    <div class="text-left text-black message">
+                                        <div *ngIf="s.meal">
+                                            <img [src]="'../../assets/images/food/'+s.food_img+'.jpg'" alt="">
+                                        </div>  
+                                        <div class="pb-2">{{s.msg}}</div>
+                                        <div *ngIf="s.meal" style="border-top:1px solid black;font-size: 26px;" class="py-2">目前試算金額:${{s.sub_total}}</div>
+                                    </div>
+                                    <!-- <br> -->
+                                    <!-- <div class="text-black message mt-4">
+                                        <div *ngIf="s.meal">
+                                            <img [src]="'../../assets/images/food/'+s.food_img+'.png'" alt="">
+                                        </div>  
+                                        <div class="pb-2">{{s.msg}}</div>
+                                        <div *ngIf="s.meal" style="border-top:1px solid black;font-size: 26px;" class="py-2">目前試算金額:${{s.sub_total}}</div>
+                                    </div> -->
+                                    <span class="msg-datetime">17:02</span>
+                                </div>
+                            </div>
+                            <div *ngIf="s.from =='User' " class="text-right">
+                                <div style="display: inline-block;" [style]="s.from === prev_from[key-1] ? 'margin-right:100px':''">
+                                    <span class="msg-datetime">17:02</span>
+                                    <div class="text-left text-black message">{{s.msg}}</div>
+                                </div>
+                                <img *ngIf="!(s.from === prev_from[key-1])" class="avatar" src="https://picsum.photos/id/659/100/100">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div *ngIf="ad" class="row align-items-center mx-0 ad" style="height:25%;">
+                    <div *ngFor="let ad of ads_food" class="ad-food" class="col-4">
+                        <img [src]="'../../assets/images/food/'+ad.food_img+'.jpg'" width="100%" alt="">
+                        <div>
+                            <div class="text">{{ad.meal}}</div>
+                            <div class="price">${{ad.price}}</div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4">
+                        <img src="../../assets/images/2.png" width="100%" alt="">
+                    </div>
+                    <div class="col-4">
+                        <img src="../../assets/images/4.png" width="100%" alt="">
+                    </div> -->
+                </div>
+            </div>
+            <div class="row mx-0">
+                <button type="button" class="col btn menu" data-toggle="modal" data-target="#exampleModal" (click)="menu()">
+                    <i class="zmdi zmdi-book-image zmdi-hc-3x"></i>
+                </button>
+                <button type="button" class="col btn Cancel" (click)="phone()" [disabled]="isPhone">Mic</button>
+                <button type="button" class="col btn Cancel" (click)="chatData()">Cancel</button>
+                <button type="button" class="col btn place_order" (click)="adFood()">
+                    <i class="zmdi zmdi-money-box zmdi-hc-3x"></i>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Menu Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-body p-0" style="position: relative;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <img src="../../assets/images/menu2.png" class="w-100" alt="">
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

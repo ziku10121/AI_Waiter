@@ -1,0 +1,335 @@
+/* WEB */
+.row{
+    padding-right: 0px;
+    padding-left:0px;
+}
+
+.chatCard{
+    /* box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2); */
+    /* height:90px;  */
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+    padding:30px 0 30px 0; 
+}
+
+.chatMenu{
+    /* height: 50px; */
+}
+
+.chatContent{
+    padding: 20px 0px 0px;
+    height: 400px;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+.chatContent .chat{
+    padding: 0 20px;
+}
+.chatContent li{
+    list-style-type: none;
+    margin-bottom: 20px;
+}
+.chatContent ul{
+    padding: 0;
+}
+.chatContent .message img{
+    width: 280px;
+    height: 280px;
+    padding: 10px;
+}
+.chatContent .ad-food img{
+    position:relative ; 
+}
+.chatContent .text{
+    width:70%;
+    height:40px;
+    background-color:white;
+    position:absolute;
+    top:3px;
+    left:15%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    border-radius: 0px 0px 15px 15px;
+    border:0.5px solid gray;
+}
+.chatContent .price{
+    color:#fff;
+    width:30%;
+    height:50px;
+    background-color:var(--red_color);
+    position:absolute;
+    bottom:3px;
+    right:18px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px;
+}
+
+.avatar-logo{
+    width:50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.avatar{
+    border-radius: 50%;
+    vertical-align: top;
+    width: 100px;
+    height: 100px;
+}
+.ai-name{
+    padding:30px 0 30px 0;
+    letter-spacing: 1.5px;
+    font-size: 36px;
+}
+.cust-info div{
+    font-size: 30px;
+    margin-top: 20%;
+}
+.msg-datetime{
+    font-size: 12px;
+}
+
+.btn {
+    /* width: 20%; */
+    /* position:fixed; */
+    height:80px;
+    /* border-radius: 5px; */
+    border: 0.5px solid lightgray;
+}
+.btn.Cancel{
+    background: var(--red_color);
+    font-size: 2rem;
+}
+.close{
+    position: absolute; 
+    right:-30px;
+    top:-60px; 
+    color:rgb(255, 255, 255);  
+    font-size: 5rem;
+}
+.home i{
+    color:#fbaf03;
+    cursor:pointer;
+}
+.home i:hover{
+    color:orange;
+}
+.ad{
+    height: 25%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.ad img{
+    border: 3px solid #DAA520;
+    position:relative;
+}
+.ai-status{
+    position: relative;
+    height: 100%;
+}
+.status-bg{
+    background-color: #fbaf03;
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    height: auto;
+    padding: 20px 0;
+    /* line-height: 80px; */
+    border-radius: 0px 10px 10px 0px;
+    position: absolute;
+    bottom: 15%;
+}
+.status-bg .txt{
+    padding-left: 10px;
+}
+.ai-audio{
+    display: flex;
+    align-items: center; 
+    height: 100px;
+}
+.ai-audio i{
+    padding-right:10px;
+}
+/* audio css animation */
+@keyframes quiet {
+    25%{
+        transform: scaleY(.6);
+    }
+    50%{
+        transform: scaleY(.4);
+    }
+    75%{
+        transform: scaleY(.8);
+    }
+} 
+@keyframes normal {
+    25%{
+        transform: scaleY(1);
+    }
+    50%{
+        transform: scaleY(.4);
+    }
+    75%{
+        transform: scaleY(.6);
+    }
+}
+@keyframes loud {
+    25%{
+        transform: scaleY(1);
+    }
+    50%{
+        transform: scaleY(.4);
+    }
+    75%{
+        transform: scaleY(1.2);
+    }
+}
+  
+.boxContainer{
+    display: flex;
+    justify-content: space-between;
+    height: 64px;
+    --boxSize: 8px;
+    --gutter: 4px;
+    width: calc((var(--boxSize) + var(--gutter)) * 5);
+}
+  
+.box{
+    transform: scaleY(.4);
+    height: 100%;
+    width: var(--boxSize);
+    background: #000000;
+
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    border-radius: 8px;
+}
+
+.box1{
+    animation-name: quiet;
+}
+.box2{
+    animation-name: normal;
+}
+.box3{
+    animation-name: quiet;
+}
+.box4{
+    animation-name: loud;
+}
+
+.box5{
+    animation-name: quiet;
+}
+/* APP */
+@media screen and (max-width: 575.98px){
+    .row.card{
+        border-top: transparent;
+        border-bottom: transparent;
+    }
+    .chatCard{
+        height: 35vh;
+        align-items: start !important;
+    }
+    .chatContent{
+        height: 72vh;
+    }
+    .chatMenu{
+        height: 10vh;
+    }
+    .avatar{
+        width: 40px;
+        height: 40px;
+    }
+    .avatar-logo{
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+    }
+    .ai-name{
+        padding:10px 0;
+        letter-spacing: 1.5px;
+        font-size: 30px;
+    }
+    .cust-info div{
+        font-size: 15px;
+        margin-top: 10px;
+    }
+    .msg-datetime{
+        font-size: 12px;
+    }
+    .chatContent .message{
+        max-width: 200px;
+        border-radius: 20px;
+        padding:10px 20px;
+        margin:0 10px;
+        display: inline-block;
+        background-color: #efefef;
+        font-size: 14px;
+    }
+    .chatContent .text{
+        width:60%;
+        left: 20%;
+        height:20px;
+        line-height: 20px;
+        font-size: 14px;
+        border-radius: 0px 0px 5px 5px;
+    }
+    .chatContent .price{
+        height:30px;
+        line-height: 30px;
+        font-size: 14px;
+    }
+}
+/* KIOSK */
+@media screen and (max-width: 1080px){
+    .row.card{
+        border-top: transparent;
+        border-bottom: transparent;
+    }
+    .card-container{
+        border:none;
+        height: 100%;
+    }
+    .chatCard{
+        height: 25%;
+    }
+    .chatContent{
+        height: 75%;
+    }
+    .chatMenu{
+        /* height: 10vh; */
+    }
+    .avatar-logo{
+        height: 80%;
+        width: auto;
+        aspect-ratio: 1 / 1;
+    }
+    .avatar-cust{
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+    }
+    .msg-datetime{
+        font-size: 20px;
+    }
+    .chatContent .message{
+        max-width: 550px;
+        border-radius: 20px;
+        padding:10px 20px;
+        margin:0 20px;
+        display: inline-block;
+        background-color: #efefef;
+        font-size: 36px;
+    }
+    .home i{
+        font-size: 75px;
+        margin-left: 20px;
+    }
+    .home img{
+        margin:0px 10px 0  0;
+        cursor:pointer;
+        width:100px;
+        height:100px;
+    }
+}
+
