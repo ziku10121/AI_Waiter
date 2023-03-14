@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 192.168.1.156 --port 4200",
-    "build": "ng build",
+    "start": "ng serve --live-reload=false --host 192.168.1.156 --port 4201",
+    "build": "ng build && http-server dist/hungerz-counter/ -o",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -70,7 +70,8 @@ export class AppComponent {
     $("#header").toggleClass("active");
   }
   dashboard() {
-    this.router.navigateByUrl('dashboard');
+    // this.router.navigateByUrl('dashboard');
+    this.router.navigateByUrl('ai_home');
   }
   home() {
     this.router.navigateByUrl('home');
