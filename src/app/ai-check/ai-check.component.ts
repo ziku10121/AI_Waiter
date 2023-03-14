@@ -14,7 +14,7 @@ interface order{
   styleUrls: ['./ai-check.component.css']
 })
 export class AiCheckComponent implements OnInit {
-
+  
   myCart: order[]=[];
   sub_total:number=0;
   tax:number=0;
@@ -28,6 +28,7 @@ export class AiCheckComponent implements OnInit {
     if(item == ''||item=='undefined') return;
     this.myCart = JSON.parse(item);
     this.processTotal();
+
   }
 
   ngAfterViewInit() {
@@ -87,10 +88,15 @@ export class AiCheckComponent implements OnInit {
   }
 
   cancel(){
-    this.router.navigateByUrl('/ai_order');
+    // this.router.navigateByUrl('/ai_order');
+    this.router.navigateByUrl('/ai_home');
+    // 停止聲音
+    // this.subject.next("stop_talk");
   }
 
   order(){
     this.router.navigateByUrl('/ai_home');
+    // 停止聲音
+    // this.subject.next("stop_talk");
   }
 }

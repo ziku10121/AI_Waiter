@@ -1,11 +1,12 @@
 import { webSocket } from 'rxjs/webSocket';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 declare var $: any;
-declare var bootstrap: any;
+
 interface message{
-  status:string,    //訊息狀態(msg, err, end, ad, menu)
+  status:string,    //訊息狀態(msg, err, end, ad, menu, ready, processing)
   from:string,      //來源(User, AI)
   msg:string,       //訊息
   food_img:string,
@@ -25,8 +26,13 @@ interface order{
   qty:string,
   price:number,
   food_img:string,
+  reason:string,
 };               // 发送的消息内容
-
+enum mode{
+  debug = "debug",
+  demo = "demo",
+  product = "product"
+}
 @Component({
   selector: 'app-ai-order',
   templateUrl: './ai-order.component.html',
@@ -34,6 +40,7 @@ interface order{
 })
 export class AiOrderComponent implements OnInit {
   subject = webSocket('ws://192.168.1.156:8767/'); //websocket連結
+  
   data: message[] = [
     {
       status:'msg',
@@ -184,18 +191,21 @@ export class AiOrderComponent implements OnInit {
       option:[],
       price:200,
       food_img:'',
+      reason:'推薦菜單',
     },{
       meal:'椒鹽鱈魚',
       qty:'1',
       option:[],
       price:280,
       food_img:'',
+      reason:'原因',
     },{
       meal:'蔥爆牛肉',
       qty:'1',
       option:[],
       price:200,
       food_img:'',
+      reason:'原因',
     }
   ];                                //消息列表
   num :number = 1;                  //暫存data順序
@@ -215,7 +225,7 @@ export class AiOrderComponent implements OnInit {
     '香炒粄條':'b04',
     '乾麵':'b05',
     '麻辣乾拌麵':'b06',
-    '辣炒粄條':'b07',
+    '辣炒板條':'b07',
     '蘿蔔排骨酥麵':'b08',
     '芋頭排骨酥湯':'c01',
     '豆干排骨湯':'c02',
@@ -224,11 +234,11 @@ export class AiOrderComponent implements OnInit {
     '酸菜肉片湯':'c05',
     '蘿蔔排骨酥湯':'c06',
     '白斬雞':'d01',
-    '咕咾肉':'d02',
+    '咕老肉':'d02',
     '季節時蔬':'d03',
     '招牌豆腐':'d04',
     '炒粉腸':'d05',
-    '金桔高麗菜':'d06',
+    '高麗菜':'d06',
     '客家小炒':'d07',
     '炸香菇':'d08',
     '紅燒魚':'d09',
@@ -262,7 +272,7 @@ export class AiOrderComponent implements OnInit {
     '香炒粄條':'75',
     '乾麵':'55',
     '麻辣乾拌麵':'55',
-    '辣炒粄條':'75',
+    '辣炒板條':'75',
     '蘿蔔排骨酥麵':'85',
     '芋頭排骨酥湯':'70',
     '豆干排骨湯':'70',
@@ -271,11 +281,11 @@ export class AiOrderComponent implements OnInit {
     '酸菜肉片湯':'160',
     '蘿蔔排骨酥湯':'70',
     '白斬雞':'300',
-    '咕咾肉':'200',
+    '咕老肉':'200',
     '季節時蔬':'120',
     '招牌豆腐':'110',
     '炒粉腸':'100',
-    '金桔高麗菜':'120',
+    '高麗菜':'120',
     '客家小炒':'220',
     '炸香菇':'100',
     '紅燒魚':'280',
@@ -298,115 +308,233 @@ export class AiOrderComponent implements OnInit {
     '蘿蔔炊排骨':'200',
   }
   
-  sendmsg = "hello";                //寄送消息
+  mode = mode.debug;                //寄送消息
   msg: message;                     //接收temp消息
   messages: message[]=[];           //全部消息
   userInfo: info;                   //user資訊
   userImg: string;                  //user Image
   prev_from : Array<string>=[];     //消息來源
+  imgTime : string;                 //圖片時間戳
 
-  chat :any;            
+  chat :any;
+  food_menu: any;            
   tempCart: order = {
     meal: '',
     qty: '',
     option:[],
     price:0,
     food_img:'',
+    reason:'',
   };
   myCart: order[]=[];               //目前user加入購物車食物
 
   sub_total:number = 0;             //food小計
   ad:boolean = false;               //顯示廣告
   ads_food:order[]=[];
-  isPhone:boolean = false;          //紀錄Phone鍵
+  isPhone:boolean = true;          //紀錄Phone鍵
   status:string = this.isPhone ? '請說話接收餐點中...' :  'AI Waiter說話中...' 
 
   constructor(private router: Router) {}
   
-  ngOnInit(): void {
+  ngOnInit() {
+    console.log('ai-order init');
     this.myCart = [];
     this.messages =[];
-    //get info
-    this.getInfo();
-
-    let t = setTimeout(() => {
-      
-      clearTimeout(t)
-    }, 1000);
-
-    //subject socket
-    this.subject.next(this.sendmsg+","+this.userInfo.gender);
+    
     this.chat = document.querySelector(".chatContent .chat");
-    this.subject.subscribe({
-      next: msg => {
-        console.log("subject msg:",msg);
-        // console.log('message received: ' + JSON.stringify(msg));
-        this.msg = JSON.parse(JSON.stringify(msg));
+    this.food_menu = document.querySelector("#exampleModal");
+    this.imgTime = new Date().getTime().toString();
+    console.log(this.imgTime);
+    //get info
+    let info = this.getInfo();
+    //subject socket
+    info.subscribe((res) => {
+      if(res) {
+        this.subject.next("hello"+","+this.userInfo.gender);
+        this.subject.subscribe({
+          next: msg => {
+            console.log("subject msg:",msg);
+            // console.log('message received: ' + JSON.stringify(msg));
+            this.msg = JSON.parse(JSON.stringify(msg));
+  
+            // 正常訊息(AI、User)
+            // if(this.mode==="debug"){
+            //   if(this.msg.status === "err"){ return;
+            //   this.status = "AI Waiter 說話中..."
+            //   this.prev_from.push(this.msg.from);
+            //   this.orderApi(this.msg);
+            //  }
+            // }
 
-        // 正常訊息(AI、User)
-        if(this.msg.status === "msg") {
-          this.status = "AI Waiter 說話中..."
-          this.prev_from.push(this.msg.from);
-          this.orderApi(this.msg);
-        }
-        // 結帳
-        if(this.msg.status === "end")
-        {
-          sessionStorage.setItem("myCart",JSON.stringify(this.myCart));
-          this.router.navigateByUrl("/ai_check");
-        }
-        // 推薦菜單
-        if(this.msg.status === "ad"){
-          if(this.ad===false)this.ad = true;
-          this.ads_food = JSON.parse(JSON.stringify(this.msg));
-          this.processAds(this.ads_food);
-        }
-        
-        return;
-        // 得知Waiter語音完，傳送狀態開始點餐
-        this.status = "請說話，接收餐點中..."
-        this.isPhone = true;
-        // 收到User訊息，分析狀態
-        this.status = "收到資訊，分析中..."
-        this.isPhone = false;
-      }, // Called whenever there is a message from the server.
-      error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-      complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
+            
+            if(this.msg.status === "menu"){
+              this.isPhone = false;
+              if(this.msg.msg=="open")
+                $('#exampleModal').modal('show');
+              if(this.msg.msg=="close")
+                $('#exampleModal').modal('hide');
+            }
+
+            if(this.msg.status === "msg") {
+              if(this.msg.from === "AI"){
+                this.status = "AI Waiter 說話中...";
+              }
+              this.prev_from.push(this.msg.from);
+              this.orderApi(this.msg);
+            }
+            
+            // 結帳
+            if(this.msg.status === "end")
+            {
+              this.order();
+            }
+            // 推薦菜單
+            if(this.msg.status === "ad"){
+              if(this.ad===false)this.ad = true;
+              let data = JSON.parse(this.msg.msg);
+              this.ads_food = JSON.parse(JSON.stringify(data));
+              
+              this.processAds(this.ads_food);
+            }
+            
+            if(this.msg.status === "ready"){
+              // this.phone();
+              this.isPhone = false;
+            }
+            
+            // 收到User訊息，分析狀態
+            if(this.msg.status === "processing"){
+              this.status = "收到資訊，分析中..."
+              this.isPhone = false;
+            }
+            
+          }, // Called whenever there is a message from the server.
+          error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+          complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
+        });
+      }
+    })
+    
+  }
+
+  getInfo():Observable<boolean>{
+    return new Observable<boolean>((observer) => {
+      let info = sessionStorage.getItem('info');
+      this.userInfo = JSON.parse(info);
+      // if(this.userInfo === null || this.userInfo === undefined)
+      //   this.router.navigateByUrl('/ai_home');
+      if(this.userInfo.age < 0){
+        //預設圖片
+        this.userImg = "1_10_boy.jpg";
+      }
+      else if(this.userInfo.age >= 1 && this.userInfo.age < 11){
+        this.userInfo.gender==='Male'? this.userImg = "1_10_girl.jpg" : this.userImg="1_10_boy.jpg";
+      }
+      else if(this.userInfo.age >= 11 && this.userInfo.age < 50){
+        this.userInfo.gender==='Male'? this.userImg = "11_50_girl.jpg" : this.userImg="11_50_boy.jpg";
+      }
+      else if(this.userInfo.age >= 50){
+        this.userInfo.gender==='Male'? this.userImg = "51_girl.jpg" : this.userImg="51_boy.jpg";
+      }
+      observer.next(true)
+    })
+    // return true;
+  }
+
+  orderApi(_msg:message){    
+    // console.log('messages',this.messages);
+    this.tempCart.option = [];
+    if(_msg.meal!='' && _msg.meal!='undefined'){
+      // 判斷是否有重複
+      const result:order = this.myCart.find((item) => item.meal === _msg.meal);
+      if(result == null){
+        this.tempCart.meal = _msg.meal.toString();
+        this.tempCart.qty = _msg.qty.toString();
+        this.tempCart.price = parseInt(this.price[_msg.meal]);
+
+        this.myCart.push(JSON.parse(JSON.stringify(this.tempCart)));
+      }else{
+        result.qty = (parseInt(result.qty) + parseInt(_msg.qty)).toString(); 
+      }
+      this.sub_total = this.sub_total+this.tempCart.price * parseInt(this.tempCart.qty);
+      _msg.sub_total = this.sub_total;
+      _msg.food_img =  'food_'+this.food[_msg.meal];
+    }
+    this.messages.push(JSON.parse(JSON.stringify(_msg)));
+    this.scrollDown();
+  }
+
+  processAds(_ads:order[]){
+    console.log(_ads,_ads[0]);
+    for(let i = 0; i<_ads.length ; i++){
+      console.log('meal:',_ads[i].meal,'reason',_ads[i].reason);
+    }
+    //get image
+    _ads.forEach(ad => {
+      ad.food_img = 'food_'+ this.food[ad.meal];
+      ad.price = this.price[ad.meal];
     });
-
+    this.ads_food = _ads;
+    console.log(this.ads_food)
+    this.scrollDown();
   }
 
-  getInfo(){
-    let info = sessionStorage.getItem('info');
-    this.userInfo = JSON.parse(info);
-    if(this.userInfo === null || this.userInfo === undefined)
-      this.router.navigateByUrl('/ai_home');
-    if(this.userInfo.age < 0){
-      //預設圖片
-      this.userImg = "1_10_boy.jpg";
-    }
-    else if(this.userInfo.age >= 1 && this.userInfo.age < 11){
-      this.userInfo.gender==='Male'? this.userImg = "1_10_girl.jpg" : this.userImg="1_10_boy.jpg";
-    }
-    else if(this.userInfo.age >= 11 && this.userInfo.age < 50){
-      this.userInfo.gender==='Male'? this.userImg = "11_50_girl.jpg" : this.userImg="11_50_boy.jpg";
-    }
-    else if(this.userInfo.age >= 50){
-      this.userInfo.gender==='Male'? this.userImg = "51_girl.jpg" : this.userImg="51_boy.jpg";
-    }
+  scrollDown(){
+    //Bottom Scroll
+    setTimeout(() => {
+      this.chat.scrollTo({
+        top:this.chat.scrollHeight,
+        behavior:'smooth'
+      });
+    }, 100);
   }
 
+  
+
+  /*** 
+   *  Btn function
+   * ***/
+
+  //手動點餐
+  manualOrder(item:order){
+    console.log('manual',item);
+    this.subject.next("order," + item.meal);
+    this.ads_food = [];
+    console.log(this.isPhone);
+    this.isPhone = true;
+  }
   menu() {
+    // this.ad = true;
+    // this.processAds(this.ad_data);
   }
   phone(){
-    this.isPhone = !this.isPhone;
-    this.status = '請說話，接收餐點中...'
-    console.log('phone');
+    this.isPhone = true;
+    this.status = '請說話，接收餐點中...';
     this.subject.next('phone');
+  }
+  //確定點餐
+  order() {
+    sessionStorage.setItem("myCart",JSON.stringify(this.myCart));
+    this.router.navigateByUrl("/ai_check");
+  }
+  finish(){
+    this.subject.next("finish");
+  }
+  aiHome(){
+    this.subject.next('stop_talk');
+    this.router.navigateByUrl('/ai_home');
+    this.subject.complete();
+  }
+
+  /*
+  adFood() {
+    this.processAds(this.ad_data);
+    console.log(this.ad_data)
+    this.ad= !this.ad;
+    // this.router.navigateByUrl('/home');
   }
 
   chatData(){
-    this.isPhone = !this.isPhone;
     if(this.data.length<this.num)return;
     if(this.num == this.data.length){
       sessionStorage.setItem('myCart',JSON.stringify(this.myCart));
@@ -424,7 +552,7 @@ export class AiOrderComponent implements OnInit {
     }
     // 每筆消息塞進消息來源
     this.prev_from.push(this.data[this.num].from.toString());
-    
+
     if(this.data[this.num].status === 'msg')this.messages.push(this.data[this.num]);
     if(this.messages[this.num].meal!='' && this.messages[this.num].meal!=undefined){
       this.tempCart.meal = this.messages[this.num].meal.toString();
@@ -434,7 +562,6 @@ export class AiOrderComponent implements OnInit {
       this.sub_total = this.sub_total+this.tempCart.price * parseInt(this.tempCart.qty);
       this.messages[this.num].sub_total = this.sub_total;
       this.messages[this.num].food_img =  'food_'+this.food[this.messages[this.num].meal];
-      console.log(this.messages);
 
       this.myCart.push(JSON.parse(JSON.stringify(this.tempCart)));
     }
@@ -451,57 +578,5 @@ export class AiOrderComponent implements OnInit {
     }, 100);
     console.log(this.myCart.length);
   }
-  
-  orderApi(_msg:message){
-    
-    // console.log('messages',this.messages);
-    // if(_msg.status === "ad") this.processAds(this.ad_data);
-    // if(_msg.status === "msg")
-    // console.log('msg',_msg,'megss',this.messages);
-    this.tempCart.option = [];
-    if(_msg.meal!='' && _msg.meal!='undefined'){
-      this.tempCart.meal = _msg.meal.toString();
-      this.tempCart.qty = _msg.qty.toString();
-      this.tempCart.price = parseInt(this.price[_msg.meal]);
-      // console.log(this.tempCart);
-      this.sub_total = this.sub_total+this.tempCart.price * parseInt(this.tempCart.qty);
-      _msg.sub_total = this.sub_total;
-      _msg.food_img =  'food_'+this.food[_msg.meal];
-      // console.log(_msg);
-      
-      this.myCart.push(JSON.parse(JSON.stringify(this.tempCart)));
-    }
-    this.messages.push(JSON.parse(JSON.stringify(_msg)));
-    this.scrollDown();
-  }
-
-  processAds(_ads:order[]){
-    //get image
-    _ads.forEach(ad => {
-      ad.food_img = 'food_'+ this.food[ad.meal];
-    });
-    this.ads_food = _ads;
-    this.scrollDown();
-  }
-
-  scrollDown(){
-    //Bottom Scroll
-    setTimeout(() => {
-      this.chat.scrollTo({
-        top:this.chat.scrollHeight,
-        behavior:'smooth'
-      });
-    }, 100);
-  }
-
-  adFood() {
-    this.processAds(this.ad_data);
-    console.log(this.ad_data)
-    this.ad= !this.ad;
-    // this.router.navigateByUrl('/home');
-  }
-
-  aiHome(){
-    this.router.navigateByUrl('/ai_home');
-  }
+  */
 }

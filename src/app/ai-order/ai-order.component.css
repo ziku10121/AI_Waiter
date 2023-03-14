@@ -4,6 +4,21 @@
     padding-left:0px;
 }
 
+.home i{
+    font-size: 75px;
+    margin-left: 20px;
+}
+.home img{
+    margin:0px 20px 0  0;
+    cursor:pointer;
+    width:100px;
+    height:100px;
+}
+.logo img{
+    margin-right:10px;
+    cursor:pointer;
+}
+
 .chatCard{
     /* box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2); */
     /* height:90px;  */
@@ -35,8 +50,13 @@
     height: 280px;
     padding: 10px;
 }
-.chatContent .ad-food img{
+.chatContent .ad-food{
     position:relative ; 
+}
+.chatContent .reason{
+    color:#fff;
+    font-size: 25px;
+    margin-bottom: 10px;
 }
 .chatContent .text{
     width:70%;
@@ -44,6 +64,7 @@
     background-color:white;
     position:absolute;
     top:3px;
+    /* top:0; */
     left:15%;
     text-align: center;
     line-height: 40px;
@@ -82,7 +103,7 @@
 }
 .cust-info div{
     font-size: 30px;
-    margin-top: 20%;
+    margin-top: 15%;
 }
 .msg-datetime{
     font-size: 12px;
@@ -144,7 +165,7 @@
 .ai-audio{
     display: flex;
     align-items: center; 
-    height: 100px;
+    height: 50px;
 }
 .ai-audio i{
     padding-right:10px;
@@ -282,9 +303,14 @@
 }
 /* KIOSK */
 @media screen and (max-width: 1080px){
+/* @media screen and (max-width: 960px){ */
     .row.card{
         border-top: transparent;
         border-bottom: transparent;
+    }
+    .cust-info div{
+        font-size: 24px;
+        margin-top: 10px;
     }
     .card-container{
         border:none;
@@ -320,16 +346,6 @@
         display: inline-block;
         background-color: #efefef;
         font-size: 36px;
-    }
-    .home i{
-        font-size: 75px;
-        margin-left: 20px;
-    }
-    .home img{
-        margin:0px 10px 0  0;
-        cursor:pointer;
-        width:100px;
-        height:100px;
     }
 }
 

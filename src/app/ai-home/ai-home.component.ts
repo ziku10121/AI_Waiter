@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { webSocket } from 'rxjs/webSocket';
+import { ITalk } from '../common/talk.interface';
+import { TalkService } from '../../services/talk.service';
 
 @Component({
   selector: 'app-ai-home',
@@ -9,12 +11,21 @@ import { webSocket } from 'rxjs/webSocket';
 })
 export class AiHomeComponent implements OnInit {
   subject = webSocket('ws://192.168.1.156:8766/');
-  
+
   ready:boolean = false;
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private talkService:TalkService) {
+      
+    }
 
   ngOnInit(): void {
-    sessionStorage.clear();
+
+    // this.talkService.startWatch((res) =>{
+
+    // })
+
+    // sessionStorage.clear();
     this.subject.subscribe({
       next: (msg) => {
         console.log('message received: ' + msg);
@@ -38,8 +49,6 @@ export class AiHomeComponent implements OnInit {
 
   start1() {
     this.ready = true;
-    // sessionStorage.setItem('info',JSON.stringify({"gender":"Female","age":10}));
-    // this.router.navigateByUrl('/ai_order');
     this.subject.next("photo");
   }
   start2() {
