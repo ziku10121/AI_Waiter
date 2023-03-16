@@ -108,8 +108,12 @@
 .msg-datetime{
     font-size: 12px;
 }
-
-.btn {
+.msg-btn .btn{
+    font-size: 20px;
+    border-radius: 10px;
+    margin:0 12px 0 12px;
+}
+.btn-area .btn {
     /* width: 20%; */
     /* position:fixed; */
     height:80px;
@@ -169,6 +173,16 @@
 }
 .ai-audio i{
     padding-right:10px;
+}
+
+.modal-body{
+    position: relative;
+}
+.modal-body .btn.phone{
+    position: absolute;
+    bottom: 0px; 
+    left:0px;
+    height: 90px;
 }
 /* audio css animation */
 @keyframes quiet {

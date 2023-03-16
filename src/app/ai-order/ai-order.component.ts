@@ -2,32 +2,9 @@ import { webSocket } from 'rxjs/webSocket';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { IInfo, IMessage, IOrder } from '../../common/talk.interface'
 declare var $: any;
 
-interface message{
-  status:string,    //訊息狀態(msg, err, end, ad, menu, ready, processing)
-  from:string,      //來源(User, AI)
-  msg:string,       //訊息
-  food_img:string,
-  meal:string,      //食物名稱
-  option:Array<string>,
-  qty:string,       //數量
-  price:number,     //價格
-  sub_total:number, //小計
-};               // 发送的消息内容
-interface info{
-  age:number,
-  gender:string
-};               // 发送的消息内容
-interface order{
-  meal:string,
-  option:Array<string>,
-  qty:string,
-  price:number,
-  food_img:string,
-  reason:string,
-};               // 发送的消息内容
 enum mode{
   debug = "debug",
   demo = "demo",
@@ -41,7 +18,7 @@ enum mode{
 export class AiOrderComponent implements OnInit {
   subject = webSocket('ws://192.168.1.156:8767/'); //websocket連結
   
-  data: message[] = [
+  data: IMessage[] = [
     {
       status:'msg',
       from:'AI',
@@ -184,7 +161,7 @@ export class AiOrderComponent implements OnInit {
       sub_total:0,
     },
   ];                                //消息列表
-  ad_data: order[] = [
+  ad_data: IOrder[] = [
     {
       meal:'梅干扣肉',
       qty:'1',
@@ -309,16 +286,17 @@ export class AiOrderComponent implements OnInit {
   }
   
   mode = mode.debug;                //寄送消息
-  msg: message;                     //接收temp消息
-  messages: message[]=[];           //全部消息
-  userInfo: info;                   //user資訊
+  msg: IMessage;                     //接收temp消息
+  messages: IMessage[]=[];           //全部消息
+  userInfo: IInfo;                   //user資訊
   userImg: string;                  //user Image
   prev_from : Array<string>=[];     //消息來源
   imgTime : string;                 //圖片時間戳
+  firstMeal:number = null;          //第一餐紀錄(index)
 
   chat :any;
   food_menu: any;            
-  tempCart: order = {
+  tempCart: IOrder = {
     meal: '',
     qty: '',
     option:[],
@@ -326,11 +304,11 @@ export class AiOrderComponent implements OnInit {
     food_img:'',
     reason:'',
   };
-  myCart: order[]=[];               //目前user加入購物車食物
+  myCart: IOrder[]=[];               //目前user加入購物車食物
 
   sub_total:number = 0;             //food小計
   ad:boolean = false;               //顯示廣告
-  ads_food:order[]=[];
+  ads_food: IOrder[]=[];
   isPhone:boolean = true;          //紀錄Phone鍵
   status:string = this.isPhone ? '請說話接收餐點中...' :  'AI Waiter說話中...' 
 
@@ -353,8 +331,8 @@ export class AiOrderComponent implements OnInit {
         this.subject.next("hello"+","+this.userInfo.gender);
         this.subject.subscribe({
           next: msg => {
-            console.log("subject msg:",msg);
-            // console.log('message received: ' + JSON.stringify(msg));
+            console.log("subject msg received:",msg);
+
             this.msg = JSON.parse(JSON.stringify(msg));
   
             // 正常訊息(AI、User)
@@ -365,49 +343,51 @@ export class AiOrderComponent implements OnInit {
             //   this.orderApi(this.msg);
             //  }
             // }
+            switch (this.msg.status) {
+              case "menu":
+                this.isPhone = false;
+                if(this.msg.msg=="open")
+                  $('#exampleModal').modal('show');
+                if(this.msg.msg=="close")
+                  $('#exampleModal').modal('hide');
+                break;
 
-            
-            if(this.msg.status === "menu"){
-              this.isPhone = false;
-              if(this.msg.msg=="open")
-                $('#exampleModal').modal('show');
-              if(this.msg.msg=="close")
-                $('#exampleModal').modal('hide');
-            }
+              case "msg":
+                if(this.msg.from === "AI"){
+                  this.status = "AI Waiter 說話中...";
+                }
+                console.log($('#exampleModal').css('display'));
+                if( $('#exampleModal').css('display') == "block") $('#exampleModal').modal('hide');
+                this.prev_from.push(this.msg.from);
+                this.orderApi(this.msg);
+                break;
 
-            if(this.msg.status === "msg") {
-              if(this.msg.from === "AI"){
-                this.status = "AI Waiter 說話中...";
-              }
-              this.prev_from.push(this.msg.from);
-              this.orderApi(this.msg);
-            }
-            
-            // 結帳
-            if(this.msg.status === "end")
-            {
-              this.order();
-            }
-            // 推薦菜單
-            if(this.msg.status === "ad"){
-              if(this.ad===false)this.ad = true;
-              let data = JSON.parse(this.msg.msg);
-              this.ads_food = JSON.parse(JSON.stringify(data));
+              case "end":
+                this.order();
+                break;
+
+              case "ad":
+                if(this.ad===false)this.ad = true;
+                let data = JSON.parse(this.msg.msg);
+                this.ads_food = JSON.parse(JSON.stringify(data));
+                //推薦餐點處理
+                this.processAds(this.ads_food);
+                break;
               
-              this.processAds(this.ads_food);
+              case "ready":
+                // this.phone();
+                this.isPhone = false;
+                break;
+              
+              case "processing":
+                this.status = "收到資訊，分析中..."
+                this.isPhone = false;
+                break;
+
+              default:
+                alert('Error!');
+                break;
             }
-            
-            if(this.msg.status === "ready"){
-              // this.phone();
-              this.isPhone = false;
-            }
-            
-            // 收到User訊息，分析狀態
-            if(this.msg.status === "processing"){
-              this.status = "收到資訊，分析中..."
-              this.isPhone = false;
-            }
-            
           }, // Called whenever there is a message from the server.
           error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
           complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -441,12 +421,12 @@ export class AiOrderComponent implements OnInit {
     // return true;
   }
 
-  orderApi(_msg:message){    
+  orderApi(_msg:IMessage){   
     // console.log('messages',this.messages);
     this.tempCart.option = [];
     if(_msg.meal!='' && _msg.meal!='undefined'){
       // 判斷是否有重複
-      const result:order = this.myCart.find((item) => item.meal === _msg.meal);
+      const result: IOrder = this.myCart.find((item) => item.meal === _msg.meal);
       if(result == null){
         this.tempCart.meal = _msg.meal.toString();
         this.tempCart.qty = _msg.qty.toString();
@@ -456,6 +436,8 @@ export class AiOrderComponent implements OnInit {
       }else{
         result.qty = (parseInt(result.qty) + parseInt(_msg.qty)).toString(); 
       }
+      if(this.firstMeal == null) this.firstMeal = this.messages.length ;
+
       this.sub_total = this.sub_total+this.tempCart.price * parseInt(this.tempCart.qty);
       _msg.sub_total = this.sub_total;
       _msg.food_img =  'food_'+this.food[_msg.meal];
@@ -464,7 +446,7 @@ export class AiOrderComponent implements OnInit {
     this.scrollDown();
   }
 
-  processAds(_ads:order[]){
+  processAds(_ads: IOrder[]){
     console.log(_ads,_ads[0]);
     for(let i = 0; i<_ads.length ; i++){
       console.log('meal:',_ads[i].meal,'reason',_ads[i].reason);
@@ -496,7 +478,7 @@ export class AiOrderComponent implements OnInit {
    * ***/
 
   //手動點餐
-  manualOrder(item:order){
+  manualOrder(item: IOrder){
     console.log('manual',item);
     this.subject.next("order," + item.meal);
     this.ads_food = [];

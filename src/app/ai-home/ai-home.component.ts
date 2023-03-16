@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { webSocket } from 'rxjs/webSocket';
-import { ITalk } from '../common/talk.interface';
+import { IInfo } from '../../common/talk.interface';
 import { TalkService } from '../../services/talk.service';
 
 @Component({
@@ -20,11 +20,11 @@ export class AiHomeComponent implements OnInit {
     }
 
   ngOnInit(): void {
-
+    // let take = this.talkService.startWatch();
     // this.talkService.startWatch((res) =>{
 
     // })
-
+    // this.talkService.startWatch();
     // sessionStorage.clear();
     this.subject.subscribe({
       next: (msg) => {
@@ -41,7 +41,6 @@ export class AiHomeComponent implements OnInit {
       error: err => {
         this.ready = false;
         alert('系統錯誤');
-        console.log('xx',err);
       }, // Called if at any point WebSocket API signals some kind of error.
       complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
     });
@@ -53,8 +52,8 @@ export class AiHomeComponent implements OnInit {
   }
   start2() {
     this.ready = true;
-    sessionStorage.setItem('info',JSON.stringify({"gender":"Male","age":25}));
-    this.router.navigateByUrl('/ai_order');
-    // this.subject.next('photo');
+    this.talkService.takePhoto();
+    // sessionStorage.setItem('info',JSON.stringify({"gender":"Male","age":25}));
+    // this.router.navigateByUrl('/ai_order');
   }
 }
