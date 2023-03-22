@@ -71,16 +71,9 @@
                                         <div class="pb-2">{{s.msg}}</div>
                                         <div *ngIf="s.meal" style="border-top:1px solid black; font-size: 26px;" class="py-2">單價:${{s.price}}</div> 
                                         <div *ngIf="s.meal" style="font-size: 26px;" class="py-2">總金額:${{s.sub_total}}</div> 
-                                        <div *ngIf="key+1 == messages.length" class="row msg-btn">
-                                            <button type="button" class="col my-2 btn menu" data-toggle="modal" data-target="#exampleModal" (click)="menu()">
-                                                跳出菜單
-                                            </button>
-                                            <button  type="button" class="col my-2 btn" (click)="phone()" [style]="isPhone? 'background:#d7d7d7;':'background:red;'" [disabled]="isPhone">
-                                                按我說話
-                                            </button>
-                                            <!--  key >= firstMeal //有餐點後每條訊息都有 -->
-                                            <button *ngIf="myCart.length!=0" type="button" class="col my-2 btn place_order" (click)="finish()">
-                                                結帳
+                                        <div *ngIf="key+1 == messages.length" class="row msg-btn justify-content-end">
+                                            <button *ngIf="s.meal" type="button" class="col my-2 btn place_order" (click)="deleteOrder(s)">
+                                                取消
                                             </button>
                                         </div>   
                                     </div>
@@ -148,7 +141,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <img src="../../assets/images/menu3.png" class="w-100" alt="" >
+                <img src="../../assets/images/menu.png" class="w-100" alt="" >
                 <button  type="button" class="col btn phone" (click)="phone()" [style]="isPhone? 'background:#d7d7d7;':'background:red;'" [disabled]="isPhone">
                     <i class="zmdi zmdi-mic zmdi-hc-2x"> 按我說話</i>
                 </button>

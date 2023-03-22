@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { WebSocketSubject } from 'rxjs/webSocket';
+import { WsService } from 'src/services/ws/ws.service';
+import { ENUM_WS_LOCATIONS } from 'src/app/commons/enum/ws.enum';
 
 declare var $: any;
 interface order{
@@ -14,14 +17,16 @@ interface order{
   styleUrls: ['./ai-check.component.css']
 })
 export class AiCheckComponent implements OnInit {
-  
+  wsOrder!:WebSocketSubject<any>;
   myCart: order[]=[];
   sub_total:number=0;
   tax:number=0;
   other_charge:number=0;
   amount_to_Pay:number=0;
   
-  constructor(private router: Router) { }
+  constructor(private router: Router, private wsService:WsService) { 
+    this.wsOrder = this.wsService.getWs(ENUM_WS_LOCATIONS.orderSocket);
+  }
 
   ngOnInit(): void {
     let item = sessionStorage.getItem('myCart');
@@ -32,7 +37,6 @@ export class AiCheckComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log("ngOnViewInit");
     // this.wow.init()
     // setTimeout(() => new WOW().init(), 1000);
 
@@ -83,20 +87,28 @@ export class AiCheckComponent implements OnInit {
       cart.total = cart.price * parseInt(cart.qty);
       this.sub_total += cart.total; 
     })
-    this.tax = Math.round(this.sub_total*0.1);
-    this.amount_to_Pay = this.sub_total + this.tax;
+    // this.tax = Math.round(this.sub_total*0.1);
+    // this.amount_to_Pay = this.sub_total + this.tax;
+    this.amount_to_Pay = this.sub_total;
   }
 
   cancel(){
-    // this.router.navigateByUrl('/ai_order');
-    this.router.navigateByUrl('/ai_home');
     // 停止聲音
-    // this.subject.next("stop_talk");
+    this.router.navigateByUrl('/ai_home');
+    this.wsOrder.next('stop_talk');
+    this.wsOrder.complete();
+  }
+  
+  order(){
+    // 停止聲音
+    this.router.navigateByUrl('/ai_home');
+    this.wsOrder.next('stop_talk');
+    this.wsOrder.complete();
   }
 
-  order(){
-    this.router.navigateByUrl('/ai_home');
-    // 停止聲音
-    // this.subject.next("stop_talk");
+  backOrder(){
+    this.wsOrder.next('stop_talk');
+    this.wsOrder.complete();
+    this.router.navigateByUrl('/ai_order');
   }
 }

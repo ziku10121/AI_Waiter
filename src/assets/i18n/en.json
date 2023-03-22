@@ -63,6 +63,7 @@
     "other_charge":"其他費用",
     "amount_to_Pay":"支付總額",
     "cancel":"取消",
+    "back_order":"回上頁",
     "place_order":"下訂單",
     "select_payment_method":"Select Payment Method",
     "order_type":"Order type",

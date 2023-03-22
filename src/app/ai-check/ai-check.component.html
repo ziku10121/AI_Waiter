@@ -70,18 +70,18 @@
 
                     <div class="order_footer">
                         <div class="amount_details">
-                            <h2 class="d-flex text-right">
+                            <!-- <h2 class="d-flex text-right">
                                 <span class="text">{{'sub_total' | translate}} </span>
                                 <span class="mr-0 ml-auto">{{sub_total}}</span>
-                            </h2>
-                            <h2 class="d-flex text-right">
+                            </h2> -->
+                            <!-- <h2 class="d-flex text-right">
                                 <span class="text">{{'tax' | translate}}</span>
                                 <span class="mr-0 ml-auto">{{tax}}</span>
                             </h2>
                             <h2 class="d-flex text-right">
                                 <span class="text">{{'other_charge' | translate}}</span>
                                 <span class="mr-0 ml-auto">0</span>
-                            </h2>
+                            </h2> -->
                         </div>
                         <div class="amount_payble">
                             <h2 class="d-flex text-right">
@@ -92,8 +92,9 @@
 
                         <div class="btn_box">
                             <div class="row no-gutter mx-0">
-                                <button type="button" class="btn col-6 Cancel" id="cancel_order" (click)="cancel()"><a>{{'cancel' | translate}}</a></button>
-                                <button type="button" class="btn col-6 place_order" id="place-order" (click)="order()"><a>{{'place_order' | translate}}</a></button>
+                                <button type="button" class="btn col Cancel" id="cancel_order" (click)="cancel()"><a>{{'cancel' | translate}}</a></button>
+                                <button type="button" class="btn col" id="back-order" (click)="backOrder()"><a>{{'back_order' | translate}}</a></button>
+                                <button type="button" class="btn col Success" id="place-order" (click)="order()"><a>{{'place_order' | translate}}</a></button>
                             </div>
                         </div>
                     </div>

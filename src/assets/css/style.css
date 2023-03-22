@@ -1804,6 +1804,11 @@
      background: var(--red_color);
  }
 
+ 
+ .order_item_container .order_footer button.btn.Success {
+    background: var(--green_color);
+}
+
 
  #page_home .item_section .item_section_header {
      position: relative;
