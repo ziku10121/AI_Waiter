@@ -90,9 +90,7 @@ export class AiCheckComponent implements OnInit {
     })
     .catch((err)=>{
       this.isPrint = false;
-      this.isPrint = true;
-      // this.dialog_txt = '列印錯誤';
-      this.setTimer();
+      this.dialog_txt = '列印錯誤';
       console.log(err)
     });
   } 
