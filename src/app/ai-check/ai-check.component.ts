@@ -36,7 +36,7 @@ export class AiCheckComponent implements OnInit {
     items : []
   }
   dialog_txt:String ='';
-  print_time:Number = 5;
+  print_time:Number = 3;
   isPrint:boolean;
 
   constructor(private router: Router, private wsService:WsService) { 
@@ -44,7 +44,7 @@ export class AiCheckComponent implements OnInit {
     this.wsCommand$ = this.wsService.getWs(ENUM_WS_LOCATIONS.commandSocket);
   }
   ngOnInit(): void {
-    this.print_time = 5;
+    this.print_time = 3;
     this.dialog_txt = '列印中(' + this.print_time +')';
     this.getMyCart().subscribe( (res) => {
       if(res) {
@@ -62,27 +62,28 @@ export class AiCheckComponent implements OnInit {
       this.myCart = JSON.parse(cart).items;
       this.amount_to_Pay = JSON.parse(cart).amount_to_Pay;
 
+      this.printer.company = "公館麵店";
+      this.printer.branch = "公館麵店";
+      this.printer.address = "苗栗縣公館鄉仁愛路二段168-1號";
+      this.printer.phone = "03-7234658";
+      this.printer.carrier = "ABC123";
+      this.printer.total = this.amount_to_Pay.toString();
+      this.printer.pay = this.amount_to_Pay.toString();
+      this.myCart.forEach( item => {
+          this.printer.items.push({
+            "name":item.meal,
+            "subtotal":item.total.toString(),
+            "qty":item.qty.toString(),
+          })
+      });
       observer.next(true);
     })
   }
 
   processPrint(){
-    this.printer.company = "公館麵店";
-    this.printer.branch = "公館麵店";
-    this.printer.address = "苗栗縣公館鄉仁愛路二段168-1號";
-    this.printer.phone = "03-7234658";
-    this.printer.carrier = "ABC123";
-    this.printer.total = this.amount_to_Pay.toString();
-    this.printer.pay = this.amount_to_Pay.toString();
-    this.myCart.forEach( item => {
-      this.printer.items.push({
-        "name":item.meal,
-        "subtotal":item.total.toString(),
-        "qty":item.qty.toString(),
-      })
-    });
-
-    axios.post(this.local_url, this.printer)
+    axios.post(this.local_url, this.printer,{
+      timeout:5000
+    })
     .then( (res) => {
       this.isPrint = true;
       this.setTimer();
