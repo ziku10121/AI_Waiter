@@ -1,5 +1,5 @@
 
-@media screen and (min-width:768px){
+@media screen and (min-width:960px){
     .order_section{
         max-width: 100%;
     }
@@ -52,5 +52,26 @@
     }
     button.btn a{
         font-size: 28px;
+    }
+
+
+    #printModal .print-area{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin:12% 0;
+    }
+    #printModal .print-txt{
+        font-size: 28px;
+    }
+    #printModal .print-icon{
+        font-size: 100px;
+        margin-bottom: 20px;
+    }
+    .zmdi-check-circle{
+        color:var(--green_color)
+    }
+    .zmdi-alert-circle{
+        color:var(--red_color)
     }
 }

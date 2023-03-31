@@ -1,6 +1,7 @@
 export enum ENUM_WS_LOCATIONS {
   photoSocket = 'photoSocket',
   orderSocket = 'orderSocket',
+  commandSocket = 'commandSocket',
   // userSocket  = 'userSocket'
 }
 

@@ -6586,7 +6586,8 @@ a.close.disabled {
 }
 
 .modal-backdrop {
-    position: fixed;
+    /* position: fixed; */
+    display: none;
     top: 0;
     left: 0;
     z-index: 1040;

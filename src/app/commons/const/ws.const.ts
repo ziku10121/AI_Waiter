@@ -2,7 +2,8 @@ import { TWsLoactionSrtingmapping } from "../type/ws.type";
 
 export const WS_LOCATIONS: Readonly<TWsLoactionSrtingmapping> = {
   photoSocket : 'ws://192.168.1.156:8766',
-  orderSocket : 'ws://192.168.1.156:8767'
+  orderSocket : 'ws://192.168.1.156:8767',
+  commandSocket : 'ws://192.168.1.156:8768',
 //   photoSocket : 'ws://192.168.1.137:8888',
 //   orderSocket : 'ws://192.168.1.137:9999'
 }

@@ -4,26 +4,6 @@
         <!-- Order Section Start -->
         <div class="order_section">
             <div class="order_item_container">
-                <!-- <div id="no-order" class="no-order active p-4 p-sm-4 p-md-4 p-lg-5"> 原先-->
-                <div id="no-order" class="no-order p-4 p-sm-4 p-md-4 p-lg-5">
-                    <div class="banner_img">
-                        <img src="assets/images/img_noorder.png" class="img-fluid">
-                    </div>
-                    <h2 [innerHTML]="'home_page_text' | translate"></h2>
-                    <h3 [innerHTML]="'home_page_text1' | translate"></h3>
-
-                    <div class="btn_box">
-                        <div class="row">
-                            <div class="col-6 col-sm-6 col-md-6 px-1 px-md-2">
-                                <button type="button" class="btn  Add_order" id="add_order"><a>{{'add_order' | translate}}</a></button>
-                            </div>
-                            <div class="col-6 col-sm-6 col-md-6  px-1 px-md-2">
-                                <button type="button" class="btn order-status" [routerLink]="['../orders_status']"><a>{{'order_status' | translate}}</a></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tab Items Start -->
                 <!-- <-- id="item_list" class="item_list"> 原先-->
                 <div id="item_list" class="item_list active">
                     <div class="order_header">
@@ -64,7 +44,7 @@
                                     <h4>{{order.total}}</h4>
                                 </div>
                             </div>
-                        <li>
+                        </li>
                     </ul>
                     <!-- Food List End -->
 
@@ -92,96 +72,38 @@
 
                         <div class="btn_box">
                             <div class="row no-gutter mx-0">
-                                <button type="button" class="btn col Cancel" id="cancel_order" (click)="cancel()"><a>{{'cancel' | translate}}</a></button>
-                                <button type="button" class="btn col" id="back-order" (click)="backOrder()"><a>{{'back_order' | translate}}</a></button>
-                                <button type="button" class="btn col Success" id="place-order" (click)="order()"><a>{{'place_order' | translate}}</a></button>
+                                <button type="button" id="cancel_order" class="btn col Cancel" (click)="cancel()">
+                                    <a>{{'cancel' | translate}}</a>
+                                </button>
+                                <button type="button" id="back-order" class="btn col" (click)="backOrder()">
+                                    <a>{{'back_order' | translate}}</a>
+                                </button>
+                                <button type="button"  id="place-order" class="btn col Success" data-toggle="modal" data-target="#printModal" (click)="order()">
+                                    <a>{{'place_order' | translate}}</a>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Tab Items End -->
-
-
-                <!-- Tab Items Start -->
-                <div id="amount_to_Pay" class="amount_to_Pay">
-                    <form class="px-4 py-3">
-                        <h4 class="pt-3 mb-3">{{'amount_to_Pay' | translate}} <strong>$46.00</strong></h4>
-                        <div class="form-group mb-4 pb-2">
-                            <label>{{'select_payment_method' | translate}}</label>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-6 col-sm-6 col-md-6 col-lg-4">
-                                    <div class="custom-control custom-radio">
-                                        <input checked type="radio" id="cash" name="PaymentMethod" class="custom-control-input">
-                                        <label class="custom-control-label" for="cash"><span class="ml-2">Cash</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-6 col-md-6 col-lg-4">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="card" name="PaymentMethod" class="custom-control-input">
-                                        <label class="custom-control-label" for="card"><span class="ml-2">Card</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group mb-4 pb-2">
-                            <label>{{'order_type' | translate}}</label>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-6 col-sm-6 col-md-6 col-lg-4">
-                                    <div class="custom-control custom-radio">
-                                        <input checked type="radio" id="takeaway" name="OrderType" class="custom-control-input">
-                                        <label class="custom-control-label" for="takeaway"><span class="ml-2">{{'takeaway' | translate}}</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-6 col-md-6 col-lg-4">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="dine-in" name="OrderType" class="custom-control-input">
-                                        <label class="custom-control-label" for="dine-in"><span class="ml-2">{{'dine_in' | translate}}</span></label>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                    <div class="select_box w-100 d-flex  md-0">
-                                        <select>
-                                            <option>Select Table</option>
-                                            <option>Table No 01</option>
-                                            <option>Table No 02</option>
-                                            <option>Table No 03</option>
-                                            <option>Table No 04</option>
-                                            <option>Table No 05</option>
-                                            <option>Table No 06</option>
-                                            <option>Table No 07</option>
-                                            <option>Table No 08</option>
-                                            <option>Table No 09</option>
-                                            <option>Table No 10</option>
-                                        </select>
-                                        <i class="zmdi zmdi-caret-down"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>{{'customer_info_optional' | translate}}</label>
-                            <input type="text" class="form-control" placeholder="{{'enter_full_name' | translate}}">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="{{'enter_phone_number' | translate}}">
-                        </div>
-                    </form>
-                    <div class="order_footer bg-white">
-                        <div class="btn_box">
-                            <div class="row no-gutter mx-0">
-                                <button type="button" class="btn col-6 Cancel" id="edit_order"><a>{{'cancel' | translate}}</a></button>
-                                <button type="button" class="btn col-6 place_order" id="submit"><a>{{'submit' | translate}}</a></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tab Items end -->
             </div>
         </div>
         <!-- Order Section End -->
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLable" aria-hidden="true">
+        <div class="modal-dialog" style="margin:25% auto auto;">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="print-area">
+                        <div class="print-icon">
+                            <i *ngIf="isPrint" class="zmdi zmdi-check-circle"></i>
+                            <i *ngIf="!isPrint" class="zmdi zmdi-alert-circle"></i>
+                        </div>
+                        <div class="print-txt">{{dialog_txt}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

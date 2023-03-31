@@ -3,14 +3,15 @@
     <div class="row align-items-start justify-content-center mx-0" style="height:100vh">
         <div class="card card-container col-12 col-lg-12 col-xl-10 bg-white px-0 mx-0">
             <div class="card-body chatCard row align-items-center justify-content-center mx-0">
-                <div class="col px-0 align-self-start ai-status" style="height: 100%;">
+                <!-- Status -->
+                <div class="col align-self-start ai-status" style="height: 100%;">
                     <!-- LOGO -->
                     <!-- <div class="col-12 text-start ml-2 mr-auto px-0 mb-3">
                         <div class="logo">
                             <img src="assets/images/logo.png" class="img-fluid" (click)="aiHome()">
                         </div>
                     </div> -->
-                    <div class="col-12 text-start ml-0 mr-auto ai-audio">
+                    <div class="col-12 text-start ml-2 mr-auto ai-audio">
                         <div>
                             <i class="zmdi zmdi-mic zmdi-hc-2x" [style]="isPhone? 'color:#24cb24;':'color:black;'"></i>
                         </div>
@@ -26,8 +27,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 text-start mr-auto px-0 status-gender">
+                        <i *ngIf="userInfo.gender==='Male'" class="zmdi zmdi-male zmdi-hc-3x"></i>
+                        <i *ngIf="userInfo.gender==='Female'" class="zmdi zmdi-female zmdi-hc-3x"></i>
+                    </div>
                     <div class="col-12 text-start ml-0 mr-auto px-0 status-bg" [style]="isPhone ? 'background:#24cb24':'background:#ccc;'">
                         <div class="txt">{{status}}</div>
+                    </div>
+                    <div class="col-12 text-start ml-0 mr-auto px-0">
+                        {{errMsg}}
                     </div>
                 </div>
                 <!-- User Info -->
@@ -49,11 +57,29 @@
                         <div class="ai-name">AI Waiter</div>
                     </div>
                 </div>
-                <!-- Home -->
-                <div class="col text-right align-self-start">
-                    <div class="home">
-                        <img src="../../assets/images/homeBtn.png" alt="homeBtn" (click)="aiHome()">
-                        <!-- <i class="zmdi zmdi-home zmdi-hc-3x" (click)="aiHome()"></i> -->
+                <div class="col text-right" style="height: 100%;">
+                    <div class="row align-content-between" style="height: 100%;">
+                        <!-- Home -->
+                        <div class="col">
+                            <div class="home-btn">
+                                <img src="../../assets/images/homeBtn.png" alt="homeBtn" (click)="aiHome()">
+                            </div>
+                        </div>
+                        <!-- Cart -->
+                        <div class="col">
+                            <div class="cart-area" data-toggle="modal" data-target="#cartModal">
+                                <div *ngIf="myCart.length" class="cart-num">{{myCart.length}}</div>
+                                <div class="row align-items-center" style="padding: 10px;">
+                                    <div class="cart-btn">
+                                        <i class="zmdi zmdi-shopping-cart"></i>
+                                    </div>
+                                    <div class="cart-txt" >
+                                        目前金額:
+                                        <p class="price">${{amount_to_Pay}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,7 +87,7 @@
                 <div class="chat overflow-auto" [ngStyle]="{'height':ad?'70%':'100%'}">
                     <ul *ngIf="true" >
                         <li *ngFor="let s of messages; let key = index"  >
-                            <div *ngIf="s.from =='AI' " class="text-left">
+                            <div *ngIf="s.from =='AI'" class="text-left">
                                 <img *ngIf="!(s.from === prev_from[key-1])" class="avatar" [src]="'../../assets/images/profile/'+ this.userImg">
                                 <div style="display: inline-block;max-width: 100%;" [style]="s.from === prev_from[key-1] ? 'margin-left:100px':''">
                                     <div class="text-left text-black message">
@@ -70,9 +96,9 @@
                                         </div>  
                                         <div class="pb-2">{{s.msg}}</div>
                                         <div *ngIf="s.meal" style="border-top:1px solid black; font-size: 26px;" class="py-2">單價:${{s.price}}</div> 
-                                        <div *ngIf="s.meal" style="font-size: 26px;" class="py-2">總金額:${{s.sub_total}}</div> 
-                                        <div *ngIf="key+1 == messages.length" class="row msg-btn justify-content-end">
-                                            <button *ngIf="s.meal" type="button" class="col my-2 btn place_order" (click)="deleteOrder(s)">
+                                        <div *ngIf="s.meal" style="font-size: 26px;" class="py-2">總金額:${{s.amount_to_Pay}}</div> 
+                                        <div class="row msg-btn justify-content-end">
+                                            <button *ngIf="s.meal" type="button" class="col-5 my-3 btn place_order" (click)="deleteOrder(s,'msg');deleteTarget($event.target);">
                                                 取消
                                             </button>
                                         </div>   
@@ -83,7 +109,7 @@
                                             <img [src]="'../../assets/images/food/'+s.food_img+'.png'" alt="">
                                         </div>  
                                         <div class="pb-2">{{s.msg}}</div>
-                                        <div *ngIf="s.meal" style="border-top:1px solid black;font-size: 26px;" class="py-2">目前試算金額:${{s.sub_total}}</div>
+                                        <div *ngIf="s.meal" style="border-top:1px solid black;font-size: 26px;" class="py-2">目前試算金額:${{s.amount_to_Pay}}</div>
                                     </div> -->
                                     <span class="msg-datetime">17:02</span>
                                 </div>
@@ -119,13 +145,13 @@
             </div>
             <!-- Button 點餐區 -->
             <div class="row mx-0 btn-area">
-                <button type="button" class="col btn menu" data-toggle="modal" data-target="#exampleModal" (click)="menu()">
+                <button type="button" class="col btn menu" data-toggle="modal" data-target="#menuModal" (click)="menuOpen()">
                     <i class="zmdi zmdi-book-image zmdi-hc-3x"></i>
                 </button>
-                <button type="button" class="col btn Cancel" (click)="phone()" [style]="isPhone? 'background:#d7d7d7;':'background:red;'" [disabled]="isPhone">
-                    <i class="zmdi zmdi-mic zmdi-hc-2x"></i>
+                <button type="button" class="col btn Cancel" (click)="phone()">
+                    <i *ngIf="phoneMode ==='open'" class="zmdi zmdi-mic zmdi-hc-2x"></i>
+                    <i *ngIf="phoneMode ==='close'" class="zmdi zmdi-mic-off zmdi-hc-2x"></i>
                 </button>
-                <!-- <button type="button" class="col btn Cancel" (click)="chatData()">Cancel</button> -->
                 <button type="button" class="col btn place_order" (click)="finish()">
                     <i class="zmdi zmdi-money-box zmdi-hc-3x"></i>
                 </button>
@@ -134,17 +160,133 @@
     </div>
     
     <!-- Menu Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" style="margin:auto;">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="menu-area">
+                        <img src="../../assets/images/menu.png" class="w-100" alt="" >
+                        <div class="menu-content">
+                            <div class="menu-header">
+                                <div class="category" (click)="filterItems('all', $event.target)">
+                                    <!-- <div class="img" [style.background-image]="'url(../../assets/images/1.png)'"></div> -->
+                                    <div class="title">全部</div>
+                                </div>
+                                <div *ngFor="let cat of food_category" class="category" (click)="filterItems(cat, $event.target)">
+                                    <!-- <div [style.background-image]="'url(../../assets/images/food/'+ad.food_img+'.png)'"></div> -->
+                                    <div class="title">{{cat}}</div>
+                                </div>
+                            </div>
+                            <div class="menu-items">
+                                <div *ngFor="let food of filterData" class="food-card" (click)="selectFood(food, $event.target); ">
+                                    <div class="food-img" [style.background-image]="'url(../../assets/images/food/' + food.goods_img + '.jpg)'"></div>
+                                    <div class="info">
+                                        <h2 class="name">{{food.goods_name}}</h2>
+                                        <h3 class="price">
+                                            ${{food.price}}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="tempSelectedFood.meal" class="menu-footer">
+                            <div class="row align-items-center justify-content-center " style="height:100%">
+                                <div class="col-2 btn-group btn-group-toggle qty-group align-items-center" data-toggle="buttons" style="height:50%">
+                                    <label class="btn minus" (click)="mathFood(tempSelectedFood, 'minus')">
+                                        <i class="zmdi zmdi-minus btn"></i>
+                                    </label>
+                                    <strong>{{tempSelectedFood.qty}}</strong>
+                                    <label class="btn plus" (click)="mathFood(tempSelectedFood, 'plus')">
+                                        <i class="zmdi zmdi-plus btn" ></i>
+                                    </label>
+                                </div>
+                                <div class="col-1 btn btn-primary btn-confirm d-flex justify-content-center align-items-center" (click)="confirmFood()">
+                                    確定
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="margin:25% auto auto;">
             <div class="modal-content">
             <div class="modal-body p-0">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <img src="../../assets/images/menu.png" class="w-100" alt="" >
-                <button  type="button" class="col btn phone" (click)="phone()" [style]="isPhone? 'background:#d7d7d7;':'background:red;'" [disabled]="isPhone">
-                    <i class="zmdi zmdi-mic zmdi-hc-2x"> 按我說話</i>
-                </button>
+                <!-- Content -->
+                <div id="item-list" class="item-list active">
+                    <div class="order-header">
+                        <div class="txt">購物車</div>
+                    </div>
+                    <div class="order-title">
+                        <div class="row align-items-center">
+                            <div class="col-3">
+                                <div class="txt">{{'item' | translate}}</div>
+                            </div>
+                            <div class="col-2 text-center">
+                                <div class="txt">{{'price' | translate}}</div>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="txt">{{'qnt' | translate}}</div>
+                            </div>
+                            <div class="col-2 text-center">
+                                <div class="txt">{{'total' | translate}}($)</div>
+                            </div>
+                            <div class="col-2 text-right">
+                                <div class="txt">{{'operate' | translate}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Food List Start -->
+                    <ul class="order-items">
+                        <li *ngFor="let order of myCart">
+                            <div class="row align-items-center">
+                                <div class="col-3">
+                                    <div>{{order.meal}}</div>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <div>${{order.price}}</div>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <i class="zmdi zmdi-minus btn btn-math" (click)="mathOrder(order, 'minus')"></i>
+                                        <strong>{{order.qty}}</strong>
+                                        <i class="zmdi zmdi-plus btn btn-math" (click)="mathOrder(order, 'plus')"></i>
+                                    </div>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <div>${{order.total}}</div>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <i class="zmdi zmdi-close btn close-btn" (click)="deleteOrder(order)"></i>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- Food List End -->
+
+                    <div class="order-footer">
+                        <div class="pay-area">
+                            <div class="row justify-content-center align-items-around">
+                                <div class="col txt">{{'amount_to_Pay' | translate}}</div>
+                                <div class="col price">${{amount_to_Pay}}</div>
+                            </div>
+                        </div>
+
+                        <div class="btn_box">
+                            <div class="row justify-content-end no-gutter mx-0">
+                                <button type="button" class="btn col-3 mr-3 my-3" id="place-order" (click)="finish()"><a>{{'place_order' | translate}}</a></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
